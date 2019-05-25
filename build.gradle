@@ -1,0 +1,19 @@
+wrapper {
+    gradleVersion = '5.4.1'
+    distributionUrl = distributionUrl.replace("bin", "all")
+}
+// Apply the java plugin to add support for Java
+apply plugin: 'java'
+apply plugin: 'application'
+
+
+
+run {
+    standardInput = System.in
+}
+// source and source level
+sourceCompatibility = 1.8
+version = '1.0'
+mainClassName = "Main"
+
+
