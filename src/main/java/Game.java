@@ -1,14 +1,17 @@
+import game.player.Player;
+import game.room.InformationCenter;
 import game.room.Lobby;
 import game.room.Outside;
 import game.room.Room;
 
 import java.util.List;
 import java.util.ArrayList;
-
+import java.util.Scanner;
 
 
 public class Game {
     private Parser parser;
+    private Player player;
     private List<Room> roomHistories;
     private List<Room> availableRoom;
     private Room currentRoom;
@@ -21,10 +24,31 @@ public class Game {
         availableRoom = new ArrayList<>();
         roomHistories = new ArrayList<>();
         parser = new Parser();
+        System.out.println("< ---- CREATE ROOMS ---- >");
         createRooms();
+        System.out.println("--DONE--");
+        System.out.println("< ---- CREATE A PLAYER ---- >");
+        createPlayer();
+        System.out.println("--Done--");
 
 
         
+    }
+
+    private void createPlayer() {
+        System.out.println("Enter the player name : ");
+        Scanner sc = new Scanner(System.in);
+        String name = sc.nextLine();
+        player = new Player(name);
+        System.out.println("----------------------------------------");
+        System.out.println("Hi, " + name);
+        System.out.println("You have 1000 hp");
+        System.out.println("You are at level 1");
+        System.out.println("The capacity of your bag is 10");
+        System.out.println("Kill enemies to earn the score");
+        System.out.println("----------------------------------------");
+        System.out.println();
+        System.out.println();
     }
 
     /**
@@ -33,12 +57,15 @@ public class Game {
     private void createRooms() {
         Room outside = new Outside();
         Room lobby = new Lobby("<-MUIC LOBBY->");
+        Room infomationCenter = new InformationCenter(" information center");
+
 
 
         availableRoom.add(outside);
         availableRoom.add(lobby);
 
         outside.setExit("up", lobby);
+        lobby.setExit("left", infomationCenter);
 
 
 
@@ -110,13 +137,24 @@ public class Game {
             case LOOK:
                 look();
                 break;
-            case BACK:
-                back();
+            case INFO:
+                printInfo();
                 break;
+
 
 
         }
         return wantToQuit;
+
+    }
+
+    private void printInfo() {
+        double proprtionHP = (player.getHp()/Player.getLEVEANDHP().get(player.getLevel()))*100.0;
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append( player.getName()+"'s information \n " +
+                "You are at level " + player.getLevel() +"\n " +
+                "HP : " + player.getHp() + " (" + proprtionHP + " % )  \n " );
+        System.out.println(stringBuilder.toString());
 
     }
     // implementations of user commands:
@@ -142,6 +180,11 @@ public class Game {
         if (!command.hasSecondWord()) {
             // if there is no second word, we don't know where to go...
             System.out.println("Go where?");
+            return;
+        }
+
+        if (command.getSecondWord().equals("back")) {
+            back();
             return;
         }
 

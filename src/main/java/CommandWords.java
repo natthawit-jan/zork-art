@@ -24,7 +24,7 @@ public class CommandWords
         ValidCommands.put("unknown", CommandWord.UNKNOWN);
         ValidCommands.put("quit", CommandWord.QUIT);
         ValidCommands.put("look", CommandWord.LOOK);
-        ValidCommands.put("back", CommandWord.BACK);
+        ValidCommands.put("info", CommandWord.INFO);
 
 
     }

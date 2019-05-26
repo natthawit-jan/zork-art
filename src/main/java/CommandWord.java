@@ -1,2 +1,2 @@
 
-public enum CommandWord { GO, QUIT, HELP, UNKNOWN, LOOK, BACK }
+public enum CommandWord { GO, QUIT, HELP, UNKNOWN, LOOK, INFO }
