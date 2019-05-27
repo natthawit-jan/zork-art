@@ -56,7 +56,7 @@ public class Room {
     public void prettyPrintMonster(){
         int index = 1;
         for (Monster m : monsters)
-            System.out.println(index++ + ". " + m.getName());
+            System.out.println(index++ + ". " + m.getName() + " at level " + m.getLevel());
 
     }
 

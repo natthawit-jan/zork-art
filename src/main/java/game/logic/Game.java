@@ -1,3 +1,5 @@
+package game.logic;
+
 import game.player.Player;
 import game.room.InformationCenter;
 import game.room.Lobby;
@@ -77,7 +79,7 @@ public class Game {
     }
 
     /**
-     * Main play routine.  Loops until end of play.
+     * game.main.Main play routine.  Loops until end of play.
      */
     public void play() {
         printWelcome();

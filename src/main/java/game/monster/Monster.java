@@ -15,9 +15,9 @@ public class Monster {
     private static Random random = new Random();
     private static final Map<Integer,Double> LEVEL_HP = new HashMap<Integer, Double>() {{
 
-        put(1, 1000.0);
-        put(2, 3000.0);
-        put(3, 6000.0);
+        put(0, 1000.0);
+        put(1, 3000.0);
+        put(2, 6000.0);
 
 
     }};
@@ -28,8 +28,10 @@ public class Monster {
 
     public Monster(String name){
         this.name = name;
-        this.hp = LEVEL_HP.get(1);
-        this.level = 1;
+        //Random level
+        int rdLevel = random.nextInt(3);
+        this.hp = LEVEL_HP.get(rdLevel);
+        this.level = rdLevel+1;
 
 
     }
@@ -67,5 +69,9 @@ public class Monster {
 
     private boolean isDead() {
         return this.hp <= 0;
+    }
+
+    public int getLevel() {
+        return level;
     }
 }
