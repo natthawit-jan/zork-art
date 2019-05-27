@@ -50,6 +50,16 @@ public class Room {
 
     }
 
+    /**
+     * print to the user monster in the list
+     */
+    public void prettyPrintMonster(){
+        int index = 1;
+        for (Monster m : monsters)
+            System.out.println(index++ + ". " + m.getName());
+
+    }
+
 
     private void randomMonsters() {
         double random = Math.random();

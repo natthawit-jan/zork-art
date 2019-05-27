@@ -169,7 +169,9 @@ public class Game {
         System.out.println("around at the university.");
         System.out.println();
         System.out.println("Your command words are:");
-        System.out.println("   go quit help ");
+        System.out.println("go [direction] -- go to the specific location (e.g. go up) ps.\"go back\" will go one room backward" +
+                "\nquit -- quit the game\nhelp\ninfo -- " +
+                "print current player's status\n");
     }
 
     /**
@@ -216,8 +218,9 @@ public class Game {
     private String getAvailableRoom(){
         StringBuilder roomToGo = new StringBuilder();
         roomToGo.append("You are at " + currentRoom.getLocationName() + "\n" +
-                "There are " + currentRoom.getMonsters().size() + " monsters in this room \n" +
-                currentRoom.getMonsters().toString());
+                "There are " + currentRoom.getMonsters().size() + " monsters in this room \n");
+        currentRoom.prettyPrintMonster();
+
 
 
 
