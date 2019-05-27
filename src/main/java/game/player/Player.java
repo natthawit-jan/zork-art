@@ -1,6 +1,6 @@
 package game.player;
 
-import game.Inventory;
+import game.inventory.Inventory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,7 +67,7 @@ public class Player {
         return hp;
     }
 
-    public void setHp(int hp) {
+    public void setHp(double hp) {
         this.hp = hp;
     }
 

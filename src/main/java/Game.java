@@ -215,8 +215,12 @@ public class Game {
      */
     private String getAvailableRoom(){
         StringBuilder roomToGo = new StringBuilder();
-        roomToGo.append("You are at " + currentRoom.getLocationName());
-        roomToGo.append('\n');
+        roomToGo.append("You are at " + currentRoom.getLocationName() + "\n" +
+                "There are " + currentRoom.getMonsters().size() + " monsters in this room \n" +
+                currentRoom.getMonsters().toString());
+
+
+
 
         int countRoom = 0;
         if (currentRoom.getExit("up") != null) {
