@@ -1,6 +1,5 @@
+
 package game.monster;
-
-
 import game.player.Player;
 
 import java.util.HashMap;
