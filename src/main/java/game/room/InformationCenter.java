@@ -1,9 +1,7 @@
 package game.room;
 
-import game.room.Room;
-
 public class InformationCenter extends Room {
-    public InformationCenter(String locationNmme) {
-        super(locationNmme);
+    public InformationCenter(String locationName) {
+        super(locationName);
     }
 }

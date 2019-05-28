@@ -28,13 +28,12 @@ public class Game {
         parser = new Parser();
         System.out.println("< ---- CREATE ROOMS ---- >");
         createRooms();
-        System.out.println("--DONE--");
+        System.out.println("--DONE! ROOM CREATED--");
         System.out.println("< ---- CREATE A PLAYER ---- >");
         createPlayer();
-        System.out.println("--Done--");
+        System.out.println("--DONE PLAYER CREATED--");
 
 
-        
     }
 
     private void createPlayer() {
@@ -49,8 +48,8 @@ public class Game {
         System.out.println("The capacity of your bag is 10");
         System.out.println("Kill enemies to earn the score");
         System.out.println("----------------------------------------");
-        System.out.println();
-        System.out.println();
+
+
     }
 
     /**
@@ -60,7 +59,6 @@ public class Game {
         Room outside = new Outside();
         Room lobby = new Lobby("<-MUIC LOBBY->");
         Room infomationCenter = new InformationCenter(" information center");
-
 
 
         availableRoom.add(outside);
@@ -103,10 +101,15 @@ public class Game {
      */
     private void printWelcome() {
         StringBuilder s = new StringBuilder();
-        s.append("Welcome to the World of Zork!\nWorld of Zork is a new, incredibly boring adventure game.\n");
-        s.append("\nType 'help' if you need help.\n");
-        System.out.println(s.toString());
-        System.out.println();
+        s.append("======================================================= \n");
+        s.append(" Welcome to the World of Zork!\nWorld of Zork is a new, \n" +
+                "incredibly boring adventure game. You have to try your \n" +
+                "best to reach to end of the game. Find way out, kill  \n" +
+                "monsters. Good luck!\n" +
+                "========================================================\n");
+        s.append("Type 'help' if you need help.\n");
+        System.out.println(s);
+
         System.out.println(getAvailableRoom());
 
 
@@ -118,9 +121,7 @@ public class Game {
      * @param command The command to be processed.
      * @return true If the command ends the game, false otherwise.
      */
-    private boolean processCommand(Command command)
-
-    {
+    private boolean processCommand(Command command) {
         boolean wantToQuit = false;
         CommandWord word = command.getCommandWord();
         switch (word) {
@@ -139,10 +140,12 @@ public class Game {
             case LOOK:
                 look();
                 break;
+            case ROOM:
+                System.out.println(getAvailableRoom());
+                break;
             case INFO:
                 printInfo();
                 break;
-
 
 
         }
@@ -151,11 +154,11 @@ public class Game {
     }
 
     private void printInfo() {
-        double proprtionHP = (player.getHp()/Player.getLEVEANDHP().get(player.getLevel()))*100.0;
+        double proprtionHP = (player.getHp() / Player.getLEVEL_HP_TABLE().get(player.getLevel())) * 100.0;
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append( player.getName()+"'s information \n " +
-                "You are at level " + player.getLevel() +"\n " +
-                "HP : " + player.getHp() + " (" + proprtionHP + " % )  \n " );
+        stringBuilder.append(player.getName() + "'s information \n " +
+                "You are at level " + player.getLevel() + "\n " +
+                "HP : " + player.getHp() + " (" + proprtionHP + " % )  \n ");
         System.out.println(stringBuilder.toString());
 
     }
@@ -167,20 +170,21 @@ public class Game {
      * command words.
      */
     private void printHelp() {
-        System.out.println("You are lost. You are alone. You wander");
-        System.out.println("around at the university.");
+        System.out.println("You are lost. You are alone. You wander around like crazy");
         System.out.println();
         System.out.println("Your command words are:");
-        System.out.println("go [direction] -- go to the specific location (e.g. go up) ps.\"go back\" will go one room backward" +
-                "\nquit -- quit the game\nhelp\ninfo -- " +
-                "print current player's status\n");
+        System.out.println("go [direction]   -- go to the specific location (e.g. go up) ps.\"go back\" will go one room backward\n" +
+                           "quit             -- quit the game\n" +
+                           "help             -- print this help\n" +
+                           "info             -- print current player's status\n" +
+                           "print            -- print the current room and its exits");
     }
 
     /**
      * Try to go in one direction. If there is an exit, enter
      * the new room, otherwise print an error message.
      */
-    private void goRoom(Command command)  {
+    private void goRoom(Command command) {
         if (!command.hasSecondWord()) {
             // if there is no second word, we don't know where to go...
             System.out.println("Go where?");
@@ -195,8 +199,6 @@ public class Game {
         String direction = command.getSecondWord();
 
 
-
-
         // Try to leave current room.
         Room nextRoom = currentRoom.getExit(direction);
 
@@ -204,98 +206,88 @@ public class Game {
         if (nextRoom != null) {
 
             currentRoom = nextRoom;
-            roomHistories.add(nextRoom) ;
+            roomHistories.add(nextRoom);
             System.out.println(getAvailableRoom());
             System.out.println();
-        }
-
-        else
+        } else
             System.out.println("There is no door!");
 
     }
+
     /**
      * Get rid of duplicate code by implementing a method getAvailableRoom.
      * It takes no parameter, just print all the possible direction the user can go in.
      */
-    private String getAvailableRoom(){
+    private StringBuilder getAvailableRoom() {
         StringBuilder roomToGo = new StringBuilder();
-        roomToGo.append("You are at " + currentRoom.getLocationName() + "\n" +
-                "There are " + currentRoom.getMonsters().size() + " monsters in this room \n");
-        currentRoom.prettyPrintMonster();
-
-
-
+        roomToGo.append("You are at " + currentRoom.getLocationName()).append("\n");
 
 
         int countRoom = 0;
         if (currentRoom.getExit("up") != null) {
-            roomToGo.append("up to ->  " + currentRoom.getExit("up").getLocationName());
+            roomToGo.append("go up >>  ").append(currentRoom.getExit("up").getLocationName());
             countRoom++;
         }
-        if(currentRoom.getExit("down") != null) {
-            roomToGo.append("down to ->  " + currentRoom.getExit("down").getLocationName());
+        if (currentRoom.getExit("down") != null) {
+            roomToGo.append("go down >>  ").append(currentRoom.getExit("down").getLocationName());
             countRoom++;
         }
-        if(currentRoom.getExit("left")!= null) {
-            roomToGo.append("left ->  " + currentRoom.getExit("left").getLocationName());
+        if (currentRoom.getExit("left") != null) {
+            roomToGo.append("go left >>  ").append(currentRoom.getExit("left").getLocationName());
             countRoom++;
         }
-        if(currentRoom.getExit("right") != null) {
-            roomToGo.append("right ->  " + currentRoom.getExit("right").getLocationName());
+        if (currentRoom.getExit("right") != null) {
+            roomToGo.append("go right >>  ").append(currentRoom.getExit("right").getLocationName());
             countRoom++;
         }
 
-        if(countRoom != 0)
-        return roomToGo.toString();
-        else
-            return roomToGo.toString() + " \n No exit to be found, please consider going back";
+
+        if (countRoom != 0) {
+
+            return roomToGo.append("\n").append(currentRoom.prettyPrintMonster()).append("\n");
+        } else
+            return roomToGo.append(currentRoom.prettyPrintMonster()).append("\n No exit to be found, please consider going back\n");
     }
 
-    /** 
+    /**
      * "Quit" was entered. Check the rest of the command to see
      * whether we really quit the game.
+     *
      * @return true, if this command quits the game, false otherwise.
      */
-    private boolean quit(Command command) 
-    {
-        if(command.hasSecondWord()) {
+    private boolean quit(Command command) {
+        if (command.hasSecondWord()) {
             System.out.println("Quit what?");
             return false;
-        }
-        else {
+        } else {
             return true;  // signal that we want to quit
         }
     }
-    private void look(){
+
+    private void look() {
         //StringBuilder printRoom = new StringBuilder();
         System.out.println(getAvailableRoom());
     }
-    private void back(){
+
+    private void back() {
 
         if (roomHistories.size() < 2) {
             System.out.println("You have no where to go back");
             return;
         }
 
-        Room previousRoom = roomHistories.get(roomHistories.size()-2);
+        Room previousRoom = roomHistories.get(roomHistories.size() - 2);
 
         currentRoom = previousRoom;
         System.out.println(getAvailableRoom());
         System.out.println();
-        roomHistories.remove(roomHistories.size()-1);
+        roomHistories.remove(roomHistories.size() - 1);
 
 
     }
 
 
-
-
-
-
-
-
-
-    }
+}
 
 
 

@@ -20,13 +20,16 @@ public class CommandWords
     public CommandWords()
     {
         // Initialise all enum type and store them in HashMap
-        ValidCommands = new HashMap<>();
-        ValidCommands.put("go", CommandWord.GO);
-        ValidCommands.put("help", CommandWord.HELP);
-        ValidCommands.put("unknown", CommandWord.UNKNOWN);
-        ValidCommands.put("quit", CommandWord.QUIT);
-        ValidCommands.put("look", CommandWord.LOOK);
-        ValidCommands.put("info", CommandWord.INFO);
+        ValidCommands = new HashMap<String, CommandWord>() {{
+            put("go", CommandWord.GO);
+            put("help", CommandWord.HELP);
+            put("unknown", CommandWord.UNKNOWN);
+            put("quit", CommandWord.QUIT);
+            put("look", CommandWord.LOOK);
+            put("info", CommandWord.INFO);
+            put("print", CommandWord.ROOM);
+        }};
+
 
 
     }

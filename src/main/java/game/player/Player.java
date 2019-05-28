@@ -16,7 +16,7 @@ public class Player {
     private int level;
     private List<Inventory> inventoryList;
     private int bagCapacity;
-    private static final Map<Integer, Double> LEVEANDHP = new HashMap<Integer, Double>() {{
+    private static final Map<Integer, Double> LEVEL_HP_TABLE = new HashMap<Integer, Double>() {{
         put(1, 1000.0);
         put(2, 3000.0);
         put(3, 5000.0);
@@ -25,8 +25,8 @@ public class Player {
 
     }} ;
 
-    public static Map<Integer, Double> getLEVEANDHP() {
-        return LEVEANDHP;
+    public static Map<Integer, Double> getLEVEL_HP_TABLE() {
+        return LEVEL_HP_TABLE;
     }
 
     public Player(String name) {
@@ -34,7 +34,7 @@ public class Player {
         this.name = name;
         score = 0;
         level = 1;
-        hp = 543.3;
+        hp =
         bagCapacity = 10;
         inventoryList = new ArrayList<>();
     }

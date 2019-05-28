@@ -2,13 +2,14 @@
 package game.room;
 
 import game.inventory.Inventory;
+import game.monster.Dragon;
+import game.monster.Godzilla;
+import game.monster.Monster;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import game.monster.*;
 public class Room {
 
     private String locationName;
@@ -17,8 +18,8 @@ public class Room {
     private List<Monster> monsters;
     private List<Inventory> inventories;
     private static Map<Class, Double> monstersProbability = new HashMap<Class, Double>() {{
-        put(Dragon.class, 0.8);
-        put(Godzilla.class, 0.2);
+        put(Dragon.class, 0.6);
+        put(Godzilla.class, 0.4);
     }};
 
 
@@ -54,14 +55,23 @@ public class Room {
     /**
      * print to the user monster in the list
      */
-    public void prettyPrintMonster(){
+    public StringBuilder  prettyPrintMonster() {
         int index = 1;
-        for (Monster m : monsters)
-            System.out.println(index++ + ". " + m.getName() + " at level " + m.getLevel());
+        StringBuilder s = new StringBuilder();
+        s.append("_______________________________________________\n" +
+        "             Monsters in This Room             \n");
 
+        for (Monster m : monsters)
+            s.append(index++ + ". " + m.getName() + " at level " + m.getLevel() + "\n");
+
+        s.append("_______________________________________________");
+        return s;
     }
 
 
+    /**
+     * Randomize monsters into the room according to their probabilities.
+     */
     private void randomMonsters() {
         double random = Math.random();
         for (Map.Entry<Class, Double> entry : monstersProbability.entrySet()) {
