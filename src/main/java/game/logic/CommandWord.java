@@ -1,6 +1,6 @@
 package game.logic;
 
 public enum CommandWord { GO, QUIT, HELP, UNKNOWN,
-    LOOK, INFO, ROOM, FIGHT, ATTACK, FLEE}
+    LOOK, INFO, ROOM, FIGHT, ATTACK, FLEE, TAKE, DROP}
 
 

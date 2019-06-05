@@ -27,6 +27,8 @@ public class CommandWords
             put("a", CommandWord.ATTACK);
             put("flee", CommandWord.FLEE);
             put("f", CommandWord.FLEE);
+            put("take", CommandWord.TAKE);
+            put("drop", CommandWord.DROP);
         }};
 
 

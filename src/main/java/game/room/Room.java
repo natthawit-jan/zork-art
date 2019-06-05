@@ -94,4 +94,15 @@ public class Room {
         return locationName;
     }
 
+    public Inventory getInventoryAt(int i) {
+        return roomInventory.getInventoryAt(i);
+    }
+
+    public void removeInventory(Inventory inventory) {
+        roomInventory.remove(inventory);
+    }
+
+    public void placeInventory(Inventory thisInventory) {
+        roomInventory.place(thisInventory);
+    }
 }

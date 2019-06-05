@@ -18,6 +18,16 @@ public class PlayerInventory {
         this.bagCapacity = 10;
     }
 
+    public boolean isEmpty(){
+        return inventoryList.size() == 0;
+    }
+
+
+    public boolean isFull(){
+        return bagCapacity == inventoryList.size();
+    }
+
+
 
     /**
      * This function is called when a player wants to

@@ -1,6 +1,12 @@
 package game.player;
 
+import game.inventory.Inventory;
+import game.logic.Command;
+import game.logic.Parser;
+import game.monster.Monster;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -35,13 +41,23 @@ public class Player {
         return LEVEL_HP_TABLE;
     }
 
+    public boolean hasInventoryToFight() {
+        return !playerInventory.isEmpty();
+
+    }
+
+    public boolean bagIsFull() {
+        return playerInventory.isFull();
+
+    }
+
     public int getMonstersKilled() {
         return monstersKilled;
     }
 
     public void levelUp() {
         level++;
-        playerInventory.setBagCapacity(playerInventory.getBagCapacity()*2);
+        playerInventory.setBagCapacity(playerInventory.getBagCapacity() * 2);
         hp = hp * 2;
         score = score * 2;
     }
@@ -76,5 +92,46 @@ public class Player {
     public int getLevel() {
         return level;
 
+    }
+
+    public void intoTheFightWith(Monster monster, Parser parser) {
+        boolean monsterIsDead = false;
+        boolean fled = false;
+        boolean playerIsDead = false;
+
+        while (!monsterIsDead && !fled && !playerIsDead) {
+            Command c = parser.getCommand();
+            System.out.println("Hi");
+            System.out.println(c.getCommandWord().toString());
+            monsterIsDead = true;
+
+
+
+        }
+
+    }
+
+    public boolean take(Inventory inventory) {
+        return playerInventory.putIn(inventory);
+    }
+
+    public StringBuilder getInventoryString() {
+        StringBuilder s = new StringBuilder();
+        for (Inventory inventory : playerInventory.getInventoryList()){
+            s.append(inventory.getName()).append("\n");
+        }
+        return s;
+    }
+
+    public List<Inventory> getInventotyList() {
+        return playerInventory.getInventoryList();
+    }
+
+    public Inventory getInventoryAt(int i) {
+        return getInventotyList().get(i);
+    }
+
+    public boolean drop(Inventory toDrop) {
+        return playerInventory.drop(toDrop);
     }
 }

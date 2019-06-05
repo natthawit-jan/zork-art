@@ -1,5 +1,6 @@
 package game.logic;
 
+import game.inventory.Inventory;
 import game.monster.Monster;
 import game.player.Player;
 import game.room.InformationCenter;
@@ -150,6 +151,12 @@ public class Game {
             case FIGHT:
                 fight(command);
                 break;
+            case TAKE:
+                take(command);
+                break;
+            case DROP:
+                drop(command);
+                break;
             case INFO:
                 printInfo();
                 break;
@@ -157,6 +164,75 @@ public class Game {
 
         }
         return wantToQuit;
+
+    }
+
+    private void drop(Command command) {
+        List<Inventory> playerInventory = player.getInventotyList();
+        int playerBagSize = playerInventory.size();
+        if (playerBagSize == 0){
+            System.out.println("Hmm Your bag is empty.");
+            return;
+        }
+        if (!command.hasSecondWord()) {
+            System.out.println("Drop what ? ");
+            System.out.println(player.getInventoryString());
+            return;
+        }
+        try {
+            int g = Integer.parseInt(command.getSecondWord());
+            if (g > playerBagSize) {
+                System.out.println("You've possessed only " + playerBagSize + "things in your bag");
+                System.out.println(player.getInventoryString());
+                return;
+            }
+            Inventory toDrop = player.getInventoryAt(g-1);
+            if (player.drop(toDrop)) {
+                currentRoom.placeInventory(toDrop);
+            }
+        } catch (NumberFormatException n) {
+            System.out.println("the second argument must be an integer");
+        }
+
+
+
+
+    }
+
+    private void take(Command command) {
+
+        if (currentRoom.inventoriesSize() == 0) {
+            System.out.println("There is nothing to take");
+            return;
+        }
+
+        if (player.bagIsFull()) {
+            System.out.println("Your bag is full! Consider dropping something with command drop [num] ");
+            return;
+        }
+        if (!command.hasSecondWord()) {
+            System.out.println("take what ?");
+            return;
+        }
+        int inventoriesSize = currentRoom.inventoriesSize();
+
+        String number = command.getSecondWord();
+
+        try {
+            int g = Integer.parseInt(number);
+            if (g > inventoriesSize) {
+                System.out.println("There are only " + inventoriesSize + " items in this room");
+                return;
+            }
+
+            Inventory inventory = currentRoom.getInventoryAt(g - 1);
+            if (player.take(inventory)) {
+                currentRoom.removeInventory(inventory);
+            }
+        } catch (NumberFormatException n) {
+            System.out.println("the second argument must be an integer");
+        }
+
 
     }
 
@@ -173,50 +249,42 @@ public class Game {
             System.out.println("No monsters to flight! You're in luck.");
             return;
         }
-        int g = -1;
+
         String number = command.getSecondWord();
 
         try {
-            g = Integer.parseInt(number);
+            int g = Integer.parseInt(number);
+            if (g > monstersSize) {
+                System.out.println("There are only " + monstersSize + " monsters in this room");
+                return;
+            }
+
+            // Final touch cause I care about the user;
+            if (!player.hasInventoryToFight()) {
+                System.out.println("You haven't get any inventory to fight! Please find one first ");
+                return;
+            }
+
+
+            Monster monster = currentRoom.getMonsterAt(g - 1);
+            player.intoTheFightWith(monster, parser);
         } catch (NumberFormatException n) {
             System.out.println("the second argument must be an integer");
         }
 
-        if (g > monstersSize) {
-            System.out.println("There are only " + monstersSize + " monsters in this room");
-            return;
-        }
-
-        // Final touch cause I care about the user;
-
-        Monster m = currentRoom.getMonsterAt(g - 1);
-        intoTheFight(m);
-
-
-
-
 
     }
 
-    private void intoTheFight(Monster m) {
-//        boolean monsterIsDead = false;
-//        boolean fled = false;
-//        boolean playerIsDead = false;
-//
-//        while (!monsterIsDead && !fled && !playerIsDead) {
-//            Command c = parser.getCommand();
-//
-//
-//        }
-    }
 
     private void printInfo() {
         double proprtionHP = (player.getHp() / Player.getLEVEL_HP_TABLE().get(player.getLevel())) * 100.0;
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(player.getName() + "'s information \n " +
                 "You are at level " + player.getLevel() + "\n " +
-                "HP : " + player.getHp() + " (" + proprtionHP + " % )  \n ");
-        System.out.println(stringBuilder.toString());
+                "HP : " + player.getHp() + " (" + proprtionHP + " % )  \n " +
+                "Your inventories are \n " +
+                 player.getInventoryString());
+        System.out.println(stringBuilder);
 
     }
     // implementations of user commands:

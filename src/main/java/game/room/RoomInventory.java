@@ -62,4 +62,16 @@ public class RoomInventory {
     public int inventoriesSize() {
         return inventories.size();
     }
+
+    public Inventory getInventoryAt(int i) {
+        return inventories.get(i);
+    }
+
+    public void remove(Inventory inventory) {
+        inventories.remove(inventory);
+    }
+
+    public void place(Inventory thisInventory) {
+        inventories.add(thisInventory);
+    }
 }
