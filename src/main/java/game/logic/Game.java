@@ -1,5 +1,6 @@
 package game.logic;
 
+import game.monster.Monster;
 import game.player.Player;
 import game.room.InformationCenter;
 import game.room.Lobby;
@@ -82,6 +83,7 @@ public class Game {
     public void play() {
         printWelcome();
 
+
         // Enter the main command loop.  Here we repeatedly read commands and
         // execute them until the game is over.
 
@@ -92,6 +94,8 @@ public class Game {
             if (command.getCommandWord() == null) continue;
 
             finished = processCommand(command);
+
+
         }
         System.out.println("Thank you for playing.  Good bye.");
     }
@@ -143,6 +147,9 @@ public class Game {
             case ROOM:
                 System.out.println(getAvailableRoom());
                 break;
+            case FIGHT:
+                fight(command);
+                break;
             case INFO:
                 printInfo();
                 break;
@@ -151,6 +158,56 @@ public class Game {
         }
         return wantToQuit;
 
+    }
+
+    private void fight(Command command) {
+
+
+        if (!command.hasSecondWord()) {
+            System.out.println("Fight what ? ");
+            return;
+
+        }
+        int monstersSize = currentRoom.monstersSize();
+        if (monstersSize == 0) {
+            System.out.println("No monsters to flight! You're in luck.");
+            return;
+        }
+        int g = -1;
+        String number = command.getSecondWord();
+
+        try {
+            g = Integer.parseInt(number);
+        } catch (NumberFormatException n) {
+            System.out.println("the second argument must be an integer");
+        }
+
+        if (g > monstersSize) {
+            System.out.println("There are only " + monstersSize + " monsters in this room");
+            return;
+        }
+
+        // Final touch cause I care about the user;
+
+        Monster m = currentRoom.getMonsterAt(g - 1);
+        intoTheFight(m);
+
+
+
+
+
+    }
+
+    private void intoTheFight(Monster m) {
+//        boolean monsterIsDead = false;
+//        boolean fled = false;
+//        boolean playerIsDead = false;
+//
+//        while (!monsterIsDead && !fled && !playerIsDead) {
+//            Command c = parser.getCommand();
+//
+//
+//        }
     }
 
     private void printInfo() {
@@ -174,10 +231,13 @@ public class Game {
         System.out.println();
         System.out.println("Your command words are:");
         System.out.println("go [direction]   -- go to the specific location (e.g. go up) ps.\"go back\" will go one room backward\n" +
-                           "quit             -- quit the game\n" +
-                           "help             -- print this help\n" +
-                           "info             -- print current player's status\n" +
-                           "print            -- print the current room and its exits");
+                "quit             -- quit the game\n" +
+                "help             -- print this help\n" +
+                "info             -- print current player's status\n" +
+                "print            -- print the current room and its exits\n" +
+                "fight [num]      -- fight the [num] monster in this room\n" +
+                "take [num]       -- pick up the [num] inventory from this room\n");
+
     }
 
     /**
@@ -244,9 +304,9 @@ public class Game {
 
         if (countRoom != 0) {
 
-            return roomToGo.append("\n").append(currentRoom.prettyPrintMonster()).append("\n");
+            return roomToGo.append("\n").append(currentRoom.prettyPrintMonstersAndInventories()).append("\n");
         } else
-            return roomToGo.append(currentRoom.prettyPrintMonster()).append("\n No exit to be found, please consider going back\n");
+            return roomToGo.append(currentRoom.prettyPrintMonstersAndInventories()).append("\n No exit to be found, please consider going back\n");
     }
 
     /**

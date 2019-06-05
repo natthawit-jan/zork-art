@@ -10,9 +10,9 @@ public class Parser
     /**
      * Create a parser to read from the terminal window.
      */
-    public Parser() 
+    public Parser()
     {
-        commands = new CommandWords();
+        this.commands = new CommandWords();
         reader = new Scanner(System.in);
     }
 

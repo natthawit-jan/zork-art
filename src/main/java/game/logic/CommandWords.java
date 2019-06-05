@@ -6,12 +6,6 @@ import java.util.HashMap;
 
 public class CommandWords
 {
-    // a constant array that holds all valid command words
-//    private static final String[] validCommands = {
-//        "go", "quit", "help"
-//    };
-    // create HashMap as a member variable.
-
 
     private HashMap<String, CommandWord> ValidCommands;
     /**
@@ -28,6 +22,11 @@ public class CommandWords
             put("look", CommandWord.LOOK);
             put("info", CommandWord.INFO);
             put("print", CommandWord.ROOM);
+            put("fight", CommandWord.FIGHT);
+            put("attack", CommandWord.ATTACK);
+            put("a", CommandWord.ATTACK);
+            put("flee", CommandWord.FLEE);
+            put("f", CommandWord.FLEE);
         }};
 
 
