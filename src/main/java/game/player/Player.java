@@ -1,16 +1,20 @@
 package game.player;
 
+import game.inventory.Diamond;
 import game.inventory.Inventory;
 import game.logic.Command;
+import game.logic.CommandWord;
 import game.logic.Parser;
 import game.monster.Monster;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 
 public class Player {
+    private static final Random RAN = new Random();
 
     private static final Map<Integer, Double> LEVEL_HP_TABLE = new HashMap<Integer, Double>() {{
         put(1, 1000.0);
@@ -26,6 +30,7 @@ public class Player {
     private double hp;
     private int level;
     private PlayerInventory playerInventory;
+    private int runAwayToken;
 
     public Player(String name) {
 
@@ -33,6 +38,7 @@ public class Player {
         monstersKilled = 0;
         score = 0;
         level = 1;
+        runAwayToken = 2;
         hp = LEVEL_HP_TABLE.get(level);
         playerInventory = new PlayerInventory();
     }
@@ -67,10 +73,6 @@ public class Player {
         return name;
     }
 
-    // Not allow a player to change name after entering a game.
-    private void setName(String name) {
-        this.name = name;
-    }
 
     public int getScore() {
         return score;
@@ -95,21 +97,86 @@ public class Player {
     }
 
     public void intoTheFightWith(Monster monster, Parser parser) {
-        boolean monsterIsDead = false;
-        boolean fled = false;
-        boolean playerIsDead = false;
+        boolean finished = false;
+        printWelcomeToTheFight(monster);
 
-        while (!monsterIsDead && !fled && !playerIsDead) {
+
+        while (!finished) {
             Command c = parser.getCommand();
-            System.out.println("Hi");
-            System.out.println(c.getCommandWord().toString());
-            monsterIsDead = true;
-
+            finished = processCommand(c, monster);
 
 
         }
 
     }
+
+    private void printWelcomeToTheFight(Monster monster) {
+        System.out.println("You are now in the fight with " + monster.getName() + " ( " + monster.getHp() + " )");
+        System.out.println("Your option is to attack or run away (Current Run away token : " + runAwayToken + ")");
+        System.out.println("Type (A)ttack or (F)lee ");
+        System.out.println();
+    }
+
+    private boolean processCommand(Command c, Monster monster) {
+        boolean quitTheFight = false;
+        CommandWord word = c.getCommandWord();
+        if (word == null) return quitTheFight;
+        switch (word) {
+            case ATTACK:
+                quitTheFight = attack(monster);
+                break;
+            case FLEE:
+                quitTheFight = flee();
+                break;
+        }
+
+            return quitTheFight;
+
+
+
+    }
+
+    private boolean flee() {
+
+        if (runAwayToken == 0) {
+            System.out.println("You can no longer run away! ");
+            return false;
+        }
+        runAwayToken--;
+        System.out.println("You have run away! The remaining token is " + runAwayToken);
+        return true;
+    }
+
+    private boolean attack(Monster monster) {
+        double playerToMonsterDam = RAN.nextDouble() * monster.getHp();
+
+        System.out.println("You've attacked with the damage of " + playerToMonsterDam );
+        monster.getDamagedBy(playerToMonsterDam);
+        double monstersFigthBackDam = RAN.nextDouble() * getHp() - 300;
+        System.out.println("The monster has attacked back with the damage of " + monstersFigthBackDam);
+        monster.fight(this, monstersFigthBackDam);
+        System.out.println("Your HP now = " + getHp());
+        System.out.println("Monster HP now = " + monster.getHp());
+        return  handleCause(monster);
+
+
+
+
+    }
+
+    private boolean handleCause(Monster monster) {
+        if (monster.getHp() > 0 && monster.getHp() < 1 ) {
+            System.out.println("You have defeated the monster");
+            monstersKilled++;
+            return true;
+
+        } else if (getHp() > 0 && getHp() < 1){
+            System.out.println("You have lost! Please, try again");
+            System.exit(0);
+        }
+        return false;
+    }
+
 
     public boolean take(Inventory inventory) {
         return playerInventory.putIn(inventory);
@@ -117,21 +184,28 @@ public class Player {
 
     public StringBuilder getInventoryString() {
         StringBuilder s = new StringBuilder();
-        for (Inventory inventory : playerInventory.getInventoryList()){
+        for (Inventory inventory : getInventoryList()) {
             s.append(inventory.getName()).append("\n");
         }
         return s;
     }
 
-    public List<Inventory> getInventotyList() {
+    public List<Inventory> getInventoryList() {
         return playerInventory.getInventoryList();
     }
-
     public Inventory getInventoryAt(int i) {
-        return getInventotyList().get(i);
+        return getInventoryList().get(i);
     }
 
     public boolean drop(Inventory toDrop) {
         return playerInventory.drop(toDrop);
+    }
+
+    public boolean foundDiamond() {
+        for (Inventory inventory : getInventoryList()) {
+            if (inventory instanceof Diamond) return true;
+        }
+        return false;
+
     }
 }

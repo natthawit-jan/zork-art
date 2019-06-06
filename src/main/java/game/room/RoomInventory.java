@@ -1,5 +1,6 @@
 package game.room;
 
+import game.inventory.Diamond;
 import game.inventory.Inventory;
 import game.inventory.Pen;
 import game.inventory.Sword;
@@ -11,7 +12,8 @@ public class RoomInventory {
 
     private static Map<Class, Double> inventoryProbability = new HashMap<Class, Double>() {{
         put(Pen.class, 0.6);
-        put(Sword.class, 0.4);
+        put(Sword.class, 0.3);
+        put(Diamond.class, 0.2);
     }};
     private static int inventoriesCount = 0;
     private static final Random RANDOM = new Random();

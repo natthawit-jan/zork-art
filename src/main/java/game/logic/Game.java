@@ -163,12 +163,23 @@ public class Game {
 
 
         }
+        if (missionFulfilled()) {
+            wantToQuit = true;
+        }
         return wantToQuit;
 
     }
 
+    private boolean missionFulfilled() {
+        if (player.getMonstersKilled() == 1 && player.foundDiamond()){
+            return true;
+        }
+        return false;
+
+    }
+
     private void drop(Command command) {
-        List<Inventory> playerInventory = player.getInventotyList();
+        List<Inventory> playerInventory = player.getInventoryList();
         int playerBagSize = playerInventory.size();
         if (playerBagSize == 0){
             System.out.println("Hmm Your bag is empty.");
