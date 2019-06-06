@@ -109,9 +109,10 @@ public class Game {
         s.append("======================================================= \n");
         s.append(" Welcome to the World of Zork!\nWorld of Zork is a new, \n" +
                 "incredibly boring adventure game. You have to try your \n" +
-                "best to reach to end of the game. Find way out, kill  \n" +
-                "monsters. Good luck!\n" +
+                "best to reach to end of the game.  \n\n " +
+                "Your objectives are kill one monster and find a diamond.\n" +
                 "========================================================\n");
+
         s.append("Type 'help' if you need help.\n");
         System.out.println(s);
 
@@ -279,6 +280,9 @@ public class Game {
 
             Monster monster = currentRoom.getMonsterAt(g - 1);
             player.intoTheFightWith(monster, parser);
+            if (!player.isRunAwayLastTime()){
+                currentRoom.removeMonster(monster);
+            }
         } catch (NumberFormatException n) {
             System.out.println("the second argument must be an integer");
         }

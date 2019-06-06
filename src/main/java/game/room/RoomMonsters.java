@@ -72,4 +72,7 @@ public class RoomMonsters {
         return monsterCount;
     }
 
+    public void removeMonster(Monster monster) {
+        getMonsters().remove(monster);
+    }
 }

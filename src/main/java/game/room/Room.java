@@ -105,4 +105,8 @@ public class Room {
     public void placeInventory(Inventory thisInventory) {
         roomInventory.place(thisInventory);
     }
+
+    public void removeMonster(Monster monster) {
+        roomMonsters.removeMonster(monster);
+    }
 }

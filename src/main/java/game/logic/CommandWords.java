@@ -35,7 +35,7 @@ public class CommandWords
 
     }
     public CommandWord getCommandword(String st){
-        CommandWord command = ValidCommands.get(st);
+        CommandWord command = ValidCommands.get(st.toLowerCase());
         if (command != null) { return command;}
         else return CommandWord.UNKNOWN;
     }

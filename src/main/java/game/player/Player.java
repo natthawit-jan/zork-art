@@ -7,6 +7,7 @@ import game.logic.CommandWord;
 import game.logic.Parser;
 import game.monster.Monster;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,9 +32,10 @@ public class Player {
     private int level;
     private PlayerInventory playerInventory;
     private int runAwayToken;
+    private boolean runAwayLastTime;
 
     public Player(String name) {
-
+        runAwayLastTime = false;
         this.name = name;
         monstersKilled = 0;
         score = 0;
@@ -98,17 +100,20 @@ public class Player {
 
     public void intoTheFightWith(Monster monster, Parser parser) {
         boolean finished = false;
+
+
         printWelcomeToTheFight(monster);
-
-
         while (!finished) {
             Command c = parser.getCommand();
             finished = processCommand(c, monster);
-
-
         }
 
+
     }
+
+
+
+
 
     private void printWelcomeToTheFight(Monster monster) {
         System.out.println("You are now in the fight with " + monster.getName() + " ( " + monster.getHp() + " )");
@@ -130,10 +135,13 @@ public class Player {
                 break;
         }
 
-            return quitTheFight;
+        return quitTheFight;
 
 
+    }
 
+    public boolean isRunAwayLastTime() {
+        return runAwayLastTime;
     }
 
     private boolean flee() {
@@ -142,35 +150,39 @@ public class Player {
             System.out.println("You can no longer run away! ");
             return false;
         }
-        runAwayToken--;
+        runAwayToken-- ;
+        runAwayLastTime = true;
         System.out.println("You have run away! The remaining token is " + runAwayToken);
         return true;
     }
 
     private boolean attack(Monster monster) {
+        DecimalFormat df2 = new DecimalFormat("#.##");
         double playerToMonsterDam = RAN.nextDouble() * monster.getHp();
 
-        System.out.println("You've attacked with the damage of " + playerToMonsterDam );
+        System.out.println("You've attacked with the damage of " + df2.format(playerToMonsterDam));
         monster.getDamagedBy(playerToMonsterDam);
-        double monstersFigthBackDam = RAN.nextDouble() * getHp() - 300;
-        System.out.println("The monster has attacked back with the damage of " + monstersFigthBackDam);
+        double monstersFigthBackDam = RAN.nextDouble() * RAN.nextDouble() * RAN.nextDouble() * getHp();
+        System.out.println("The monster has attacked back with the damage of " + df2.format(monstersFigthBackDam));
         monster.fight(this, monstersFigthBackDam);
-        System.out.println("Your HP now = " + getHp());
-        System.out.println("Monster HP now = " + monster.getHp());
-        return  handleCause(monster);
-
-
+        System.out.println("Your HP now = " + df2.format(getHp()));
+        System.out.println("Monster HP now = " + df2.format(monster.getHp()));
+        return handleCause(monster);
 
 
     }
 
     private boolean handleCause(Monster monster) {
-        if (monster.getHp() > 0 && monster.getHp() < 1 ) {
+        long monsterHPRound = Math.round(monster.getHp());
+        long roundedPlayerHP = Math.round(getHp());
+
+        if (monsterHPRound <= 0) {
             System.out.println("You have defeated the monster");
+            runAwayLastTime = false;
             monstersKilled++;
             return true;
 
-        } else if (getHp() > 0 && getHp() < 1){
+        } else if (roundedPlayerHP <= 0) {
             System.out.println("You have lost! Please, try again");
             System.exit(0);
         }
@@ -193,6 +205,7 @@ public class Player {
     public List<Inventory> getInventoryList() {
         return playerInventory.getInventoryList();
     }
+
     public Inventory getInventoryAt(int i) {
         return getInventoryList().get(i);
     }
